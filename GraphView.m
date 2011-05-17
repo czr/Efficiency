@@ -67,7 +67,7 @@
     NSEnumerator *pathEnum = [paths objectEnumerator];
     NSBezierPath *path;
     while ((path = [pathEnum nextObject])) {
-        [path setLineWidth:2.0];
+        [path setLineWidth:1.0];
         [path stroke];
     }
     
