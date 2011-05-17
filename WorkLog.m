@@ -44,14 +44,14 @@
 -(void) startWorkChunk {
 	NSAssert(currentChunk == nil, @"Already got an open work chunk");
 	currentChunk = [[WorkChunk alloc] init];
+
+    WorkDay *today = [self today];
+	[today addChunk:currentChunk];
 }
 
 -(void) endWorkChunk {
 	NSAssert(currentChunk != nil, @"No open work chunk");
 	[currentChunk close];
-	
-    WorkDay *today = [self today];
-	[today addChunk:currentChunk];
 	currentChunk = nil;
 }
 

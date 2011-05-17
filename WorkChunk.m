@@ -25,11 +25,21 @@
 	return [now timeIntervalSinceReferenceDate] - [today timeIntervalSinceReferenceDate];
 }
 
+-(int) end {
+    if (end != -1) {
+        return end;
+    }
+    else {
+        return [self secondOfDay];
+    }
+}
+
 -(id) init {
 	self = [super init];
 	
 	if (self != nil) {
 		[self setStart:[self secondOfDay]];
+		[self setEnd:-1];
 	}
 	
 	return self;

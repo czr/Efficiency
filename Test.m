@@ -14,12 +14,19 @@
 
 @implementation Test
 
-- (void)testWorkChunk {
+- (void)testWorkChunkInactive {
 	WorkChunk *chunk = [[WorkChunk alloc] init];
 	[chunk setStart:5];
 	[chunk setEnd:10];
 	STAssertEquals(5,[chunk start],@"WorkChunk start");
 	STAssertEquals(10,[chunk end],@"WorkChunk end");
+}
+
+- (void)testWorkChunkActive {
+	WorkChunk *chunk = [[WorkChunk alloc] init];
+	[chunk setStart:5];
+	STAssertEquals(5,[chunk start],@"WorkChunk start");
+	STAssertTrue([chunk end] > 0,@"WorkChunk end");
 }
 
 - (void)testWorkChunkEqual {
@@ -77,7 +84,6 @@
 - (void)testWorkLog {
     WorkLog *log = [[WorkLog alloc] init];
     [log startWorkChunk];
-    [log endWorkChunk];
     
     NSEnumerator *e = [log dayEnumerator];
     WorkDay *day = [e nextObject];
