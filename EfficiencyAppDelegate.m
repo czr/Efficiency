@@ -21,23 +21,26 @@
 @synthesize stopButton;
 @synthesize graph;
 @synthesize log;
+@synthesize timer;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	log = [[WorkLog alloc] init];
 	[self load];
     NSLog(@"graph: %@",graph);
     [graph setLog:log];
-    NSLog(@"setNeedsDisplay start");
-    [graph setNeedsDisplay:YES];
-    NSLog(@"setNeedsDisplay end");
     #ifdef DEBUG
         [window setTitle:@"Efficiency Dev"];
     #endif
+    timer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(redraw) userInfo:nil repeats:YES];
     [stopButton setEnabled:NO];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
 	[self dump];
+}
+
+- (void)redraw {
+    [graph setNeedsDisplay:YES];
 }
 
 - (IBAction)start: (id)sender {

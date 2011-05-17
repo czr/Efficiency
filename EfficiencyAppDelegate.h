@@ -16,6 +16,7 @@
     NSButton *stopButton;
     GraphView *graph;
 	WorkLog *log;
+    NSTimer *timer;
 }
 
 @property (assign) IBOutlet NSWindow *window;
@@ -24,6 +25,7 @@
 @property (assign) IBOutlet GraphView *graph;
 
 @property (assign) WorkLog *log;
+@property (assign) NSTimer *timer;
 
 - (IBAction) start: (id) sender;
 - (IBAction) stop: (id) sender;
