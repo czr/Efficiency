@@ -7,30 +7,19 @@
 //
 
 #import "WorkChunk.h"
-
+#import "Time.h"
 
 @implementation WorkChunk
 
 @synthesize start;
 @synthesize end;
 
--(int) secondOfDay {
-	NSDate *now = [NSDate date];
-	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-	NSDateComponents *components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:now];
-	[components setHour:0];
-	[components setMinute:0];
-	[components setSecond:0];
-	NSDate *today = [calendar dateFromComponents:components];
-	return [now timeIntervalSinceReferenceDate] - [today timeIntervalSinceReferenceDate];
-}
-
 -(int) end {
     if (end != -1) {
         return end;
     }
     else {
-        return [self secondOfDay];
+        return [Time secondOfDay];
     }
 }
 
@@ -38,7 +27,7 @@
 	self = [super init];
 	
 	if (self != nil) {
-		[self setStart:[self secondOfDay]];
+		[self setStart:[Time secondOfDay]];
 		[self setEnd:-1];
 	}
 	
@@ -46,7 +35,7 @@
 }
 
 -(void) close {
-	[self setEnd:[self secondOfDay]];
+	[self setEnd:[Time secondOfDay]];
 }
 
 - (BOOL)isEqual:(id)otherObject;

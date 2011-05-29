@@ -18,6 +18,7 @@
 @property (assign) WorkLog *log;
 
 -(NSArray*) plotDay:(WorkDay*)day;
+-(NSArray*) plotDay:(WorkDay*)day from:(int)from until:(int)until;
 -(NSArray*) previousPlots;
 -(NSArray*) todayPlot;
 

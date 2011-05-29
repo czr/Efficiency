@@ -157,7 +157,7 @@
 	GraphView *graph = [[GraphView alloc] init];
 	NSArray *dayGraph = [graph plotDay:day];
 	NSArray *expected = [NSArray arrayWithObjects:
-						 [NSValue valueWithPoint:NSMakePoint(0.0, 0.0)],
+						 [NSValue valueWithPoint:NSMakePoint(0.0, 1.0)],
 						 [NSValue valueWithPoint:NSMakePoint(0.0, 1.0)],
 						 [NSValue valueWithPoint:NSMakePoint(24.0, 1.0)],
 						 [NSValue valueWithPoint:NSMakePoint(24.0, 1.0)],
@@ -173,6 +173,32 @@
 	NSArray *dayGraph = [graph plotDay:day];
 	NSArray *expected = [NSArray arrayWithObjects:
 						 [NSValue valueWithPoint:NSMakePoint(0.0, 0.0)],
+						 [NSValue valueWithPoint:NSMakePoint(24.0, 0.0)],
+						 nil];
+	
+    STAssertEqualObjects(expected, dayGraph, @"Day graph at 0%");
+}
+
+- (void)testPlotDayFirstHalf {
+	WorkDay *day = [[WorkDay alloc] init];
+	
+	GraphView *graph = [[GraphView alloc] init];
+	NSArray *dayGraph = [graph plotDay:day from:0 until:(12 * 60 * 60)];
+	NSArray *expected = [NSArray arrayWithObjects:
+						 [NSValue valueWithPoint:NSMakePoint(0.0, 0.0)],
+						 [NSValue valueWithPoint:NSMakePoint(12.0, 0.0)],
+						 nil];
+	
+    STAssertEqualObjects(expected, dayGraph, @"Day graph at 0%");
+}
+
+- (void)testPlotDayLastHalf {
+	WorkDay *day = [[WorkDay alloc] init];
+	
+	GraphView *graph = [[GraphView alloc] init];
+	NSArray *dayGraph = [graph plotDay:day from:(12 * 60 * 60) until:(24 * 60 * 60)];
+	NSArray *expected = [NSArray arrayWithObjects:
+						 [NSValue valueWithPoint:NSMakePoint(12.0, 0.0)],
 						 [NSValue valueWithPoint:NSMakePoint(24.0, 0.0)],
 						 nil];
 	

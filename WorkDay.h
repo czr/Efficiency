@@ -20,5 +20,6 @@
 -(void) addChunk:(WorkChunk*)chunk;
 -(WorkChunk*) getChunkAt:(int)index;
 -(NSEnumerator*) chunkEnumerator;
+-(float) efficiencyUntil:(int)until;
 
 @end

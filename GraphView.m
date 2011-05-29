@@ -7,6 +7,7 @@
 //
 
 #import "GraphView.h"
+#import "Time.h"
 
 @implementation GraphView
 
@@ -71,20 +72,25 @@
         [path stroke];
     }
     
-    NSBezierPath *todayPath = [self plotToPath:[self todayPlot]]; //FIXME: Does this create a today object in the log before load is called? Wouldn't be a problem if I just blanked the log before loading.
+    int now = [Time secondOfDay];
+    WorkDay *today = [[self log] today];
+    NSBezierPath *todayCompletedPath = [self plotToPath:[self plotDay:today from:0 until:now]];
     [[NSColor redColor] set];
-    [todayPath setLineWidth:2.0];
-    [todayPath stroke];
+    [todayCompletedPath setLineWidth:2.0];
+    [todayCompletedPath stroke];
+    
+    NSBezierPath *todayProjectedPath = [self plotToPath:[self plotDay:today from:now until:(60 * 60 * 24)]];
+    [[NSColor colorWithDeviceRed:1.0 green:0.0 blue:0.0 alpha:0.5] set];
+    [todayProjectedPath setLineWidth:2.0];
+    [todayProjectedPath stroke];
     
     [self drawAxes];
 }
 
--(NSArray*) plotDay:(WorkDay*)day {
+-(NSArray*) plotDay:(WorkDay*)day from:(int)from until:(int)until {
     NSMutableArray *points = [[NSMutableArray alloc] init];
     
-    [points addObject:[NSValue valueWithPoint:NSMakePoint(0.0, 0.0)]];
-    
-    int workAccumulated = 0;
+    [points addObject:[NSValue valueWithPoint:NSMakePoint((float)from / (60 * 60), [day efficiencyUntil:from])]];
     
     id o;
     NSEnumerator *e = [day chunkEnumerator];
@@ -93,33 +99,23 @@
         
         int start = [chunk start];
         int end = [chunk end];
-        double startEfficiency, endEfficiency;
         
-        if (start == 0) {
-            startEfficiency = 1.0;
+        if (start >= from) {
+            [points addObject:[NSValue valueWithPoint:NSMakePoint(((float)start / (60 * 60)), [day efficiencyUntil:start])]];
         }
-        else {
-            startEfficiency = (float)workAccumulated / start;
-        }
-        [points addObject:[NSValue valueWithPoint:NSMakePoint(((float)start / (60 * 60)), startEfficiency)]];
-
-        workAccumulated += end - start;
-
-        if (end == 0) {
-            endEfficiency = 0.0;
-        }
-        else {
-            endEfficiency = (float)workAccumulated / end;
-        }
-        [points addObject:[NSValue valueWithPoint:NSMakePoint(((float)end / (60 * 60)), endEfficiency)]];
         
+        if (end >= from) {
+            [points addObject:[NSValue valueWithPoint:NSMakePoint(((float)end / (60 * 60)), [day efficiencyUntil:end])]];
+        }
     }
     
-    double totalEfficiency = (float)workAccumulated / (24 * 60 * 60);
-
-    [points addObject:[NSValue valueWithPoint:NSMakePoint(24.0, totalEfficiency)]];
+    [points addObject:[NSValue valueWithPoint:NSMakePoint((float)until / (60 * 60), [day efficiencyUntil:until])]];
     
     return points;
+}
+
+-(NSArray*) plotDay:(WorkDay*)day {
+    return [self plotDay:day from:0 until:(24 * 60 * 60)];
 }
 
 -(NSArray*) previousPlots {

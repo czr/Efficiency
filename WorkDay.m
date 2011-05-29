@@ -35,4 +35,31 @@
     return [chunks objectEnumerator];
 }
 
+-(float) efficiencyUntil:(int)until {
+    
+    if (until == 0) {
+        if ([chunks count] > 0 && [[self getChunkAt:0] start] == 0) {
+            return 1.0;
+        }
+        else {
+            return 0.0;
+        }
+    }
+    
+    NSEnumerator *e = [self chunkEnumerator];
+    int secondsWorked = 0;
+    WorkChunk *chunk;
+    while ((chunk = [e nextObject])) {
+        int start = [chunk start];
+        int end = [chunk end];
+        if (start < until && end <= until) {
+            secondsWorked += end - start;
+        }
+        if (start < until && end > until) {
+            secondsWorked += until - start;
+        }
+    }
+    return (float)secondsWorked / until;
+}
+
 @end
