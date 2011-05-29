@@ -72,6 +72,9 @@
 }
 
 -(void) fromString:(NSString*)string {
+    
+    days = [[NSMutableDictionary alloc] init];
+    
 	NSScanner *scanner = [NSScanner scannerWithString:string];
 	
 	NSInteger start;
