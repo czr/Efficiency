@@ -112,6 +112,35 @@
     STAssertEqualObjects(spec,[log toString],nil);
 }
 
+- (void)testWorkLogTodayPercentile50 {
+    WorkLog *log = [[WorkLog alloc] init];
+    int percentile = [log percentileTodayAtTime:(60 * 60 * 24)];
+    STAssertEquals(percentile,50,nil);
+}
+
+- (void)testWorkLogTodayPercentile25 {
+    WorkLog *log = [[WorkLog alloc] init];
+    NSString *spec = @"2011-05-04:\n"
+                      "start:10 end:100\n"
+                      "\n";
+    [log fromString:spec];
+    int percentile = [log percentileTodayAtTime:(60 * 60 * 24)];
+    STAssertEquals(percentile,25,nil);
+}
+
+- (void)testWorkLogTodayPercentile75 {
+    WorkLog *log = [[WorkLog alloc] init];
+    NSString *spec = @"2011-05-04:\n"
+                      "\n";
+    [log fromString:spec];
+    WorkChunk *chunk = [[WorkChunk alloc] init];
+    [chunk setStart:10];
+    [chunk setEnd:1000];
+    [[log today] addChunk:chunk];
+    int percentile = [log percentileTodayAtTime:(60 * 60 * 24)];
+    STAssertEquals(percentile,75,nil);
+}
+
 - (void)testGraphView {
     GraphView *graph = [[GraphView alloc] init];
     WorkLog *log = [[WorkLog alloc] init];

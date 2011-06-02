@@ -41,6 +41,20 @@
     [path stroke];
 }
 
+- (void)drawPercentile {
+    double graphMargin = 10.5; // FIXME: Unduplicate
+    int now = [Time secondOfDay];
+    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+    [attributes setObject:[NSFont fontWithName:@"Helvetica" size:32] forKey:NSFontAttributeName];
+    NSString *percentileText = [NSString stringWithFormat:@"%d", [[self log] percentileTodayAtTime:now]];
+    NSSize size = [percentileText sizeWithAttributes:attributes];
+    NSPoint percentileOrigin;
+    percentileOrigin.x = [self bounds].size.width - (size.width + graphMargin);
+    percentileOrigin.y = [self bounds].size.height - (size.height + graphMargin);
+    [percentileText drawAtPoint:percentileOrigin withAttributes:attributes];
+    
+}
+
 - (NSBezierPath*)plotToPath:(NSArray*)plot {
     NSBezierPath *path = [[NSBezierPath alloc] init];
     NSEnumerator *pointEnum = [plot objectEnumerator];
@@ -83,6 +97,8 @@
     [[NSColor colorWithDeviceRed:1.0 green:0.0 blue:0.0 alpha:0.5] set];
     [todayProjectedPath setLineWidth:2.0];
     [todayProjectedPath stroke];
+    
+    [self drawPercentile];
     
     [self drawAxes];
 }

@@ -8,7 +8,6 @@
 
 #import "WorkLog.h"
 
-
 @implementation WorkLog
 
 -(id) init {
@@ -106,7 +105,6 @@
 }
 
 -(NSEnumerator*) dayEnumeratorWithToday:(bool)includeToday {
-    NSLog(@"days contains %d elements",[days count]);
 
     NSString *todayYMD = [self todayYMD];
 
@@ -119,8 +117,33 @@
             [sortedObjects addObject:[days objectForKey:k]];
         }
     }
-    NSLog(@"sortedObjects contains %d elements",[sortedObjects count]);
     return [sortedObjects objectEnumerator];
 }
+
+- (int) percentileTodayAtTime:(int)time {
+    int smaller = 0;
+    int greater = 0;
+    
+    float todayEfficiency = [[self today] efficiencyUntil:time];
+    
+    NSEnumerator *e = [self dayEnumeratorWithToday:NO];
+    WorkDay *d;
+    while ((d = [e nextObject])) {
+        if ([d efficiencyUntil:time] < todayEfficiency) {
+            smaller++;
+        }
+        else {
+            greater++;
+        }
+    }
+    
+    int todayPos = smaller + 1;
+    int total = smaller + 1 + greater;
+    
+    int percentile = (100.0 / total) * (todayPos - 0.5);
+    
+    return percentile;
+};
+
 
 @end

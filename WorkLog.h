@@ -25,4 +25,6 @@
 - (NSEnumerator*) dayEnumeratorWithToday:(bool)includeToday;
 - (WorkDay*) today;
 
+- (int) percentileTodayAtTime:(int)time;
+
 @end
