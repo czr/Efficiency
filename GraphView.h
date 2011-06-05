@@ -19,6 +19,7 @@
 
 -(NSArray*) plotDay:(WorkDay*)day;
 -(NSArray*) plotDay:(WorkDay*)day from:(int)from until:(int)until;
+-(NSArray*) plotDay:(WorkDay*)day from:(int)from until:(int)until stepsize:(int)stepsize;
 -(NSArray*) previousPlots;
 -(NSArray*) todayPlot;
 

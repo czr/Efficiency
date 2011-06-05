@@ -103,31 +103,22 @@
     [self drawAxes];
 }
 
--(NSArray*) plotDay:(WorkDay*)day from:(int)from until:(int)until {
+-(NSArray*) plotDay:(WorkDay*)day from:(int)from until:(int)until stepsize:(int)stepsize {
     NSMutableArray *points = [[NSMutableArray alloc] init];
     
     [points addObject:[NSValue valueWithPoint:NSMakePoint((float)from / (60 * 60), [day efficiencyUntil:from])]];
     
-    id o;
-    NSEnumerator *e = [day chunkEnumerator];
-    while ((o = [e nextObject])) {
-        WorkChunk *chunk = (WorkChunk *)o;
-        
-        int start = [chunk start];
-        int end = [chunk end];
-        
-        if (start >= from) {
-            [points addObject:[NSValue valueWithPoint:NSMakePoint(((float)start / (60 * 60)), [day efficiencyUntil:start])]];
-        }
-        
-        if (end >= from) {
-            [points addObject:[NSValue valueWithPoint:NSMakePoint(((float)end / (60 * 60)), [day efficiencyUntil:end])]];
-        }
+    for(int i = from + stepsize; i < until; i += stepsize) {
+        [points addObject:[NSValue valueWithPoint:NSMakePoint((float)i / (60 * 60), [day efficiencyUntil:i])]];
     }
     
     [points addObject:[NSValue valueWithPoint:NSMakePoint((float)until / (60 * 60), [day efficiencyUntil:until])]];
     
     return points;
+}
+
+-(NSArray*) plotDay:(WorkDay*)day from:(int)from until:(int)until {
+    return [self plotDay:day from:from until:until stepsize:60];
 }
 
 -(NSArray*) plotDay:(WorkDay*)day {
