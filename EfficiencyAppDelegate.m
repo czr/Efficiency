@@ -71,11 +71,24 @@
 	}
 }
 
+/**
+    Returns the support directory for the application, used to store the Core Data
+    store file.  This code uses a directory named "Efficiency" for
+    the content, either in the NSApplicationSupportDirectory location or (if the
+    former cannot be found), the system's temporary directory.
+ */
+
+- (NSString *)applicationSupportDirectory {
+
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : NSTemporaryDirectory();
+    return [basePath stringByAppendingPathComponent:@"Efficiency"];
+}
+
 - (NSString*) pathForDataFile {
 	NSFileManager *fileManager = [NSFileManager defaultManager];
     
-	NSString *folder = @"~/Library/Application Support/Efficiency/";
-	folder = [folder stringByExpandingTildeInPath];
+    NSString *folder = [self applicationSupportDirectory];
 	
 	if ([fileManager fileExistsAtPath: folder] == NO)
 	{
